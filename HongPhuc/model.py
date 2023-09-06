@@ -64,6 +64,6 @@ class HandGestureDetectionModel:
     
     # Predict gesture
     def predict(self, landmarks):
-        prediction = self.model.predict([landmarks])
+        prediction = self.model.predict(landmarks)
         return np.argmax(prediction[0])
 
