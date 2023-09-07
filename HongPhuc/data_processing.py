@@ -17,6 +17,8 @@ class DataProcessing:
         }
         self.x_train = []
         self.y_train = []
+        self.val_x_train = []
+        self.val_y_train = []
 
     def convert_index_to_image_filename(self, index):
         # (1).jpg, (2).jpg, (3).jpg, ...
@@ -24,13 +26,18 @@ class DataProcessing:
 
     # Read images from folder
     def read_images_from_folder(self, folder_path, number_of_images, value):
+        val_index = number_of_images - number_of_images * default.validation_percentage // 100
         for i in range(1, number_of_images + 1):
             print("Reading " + folder_path + '/' + self.convert_index_to_image_filename(i) + "...")
             image = cv2.imread(folder_path + '/' + self.convert_index_to_image_filename(i))
             landmarks = get_landmarks_from_images(image)
             if(landmarks != None):
-                self.x_train.append(landmarks)   
-                self.y_train.append(value)
+                if i <= val_index:
+                    self.x_train.append(landmarks)
+                    self.y_train.append(value)
+                else:
+                    self.val_x_train.append(landmarks)
+                    self.val_y_train.append(value)
 
     def create_dataset(self):
         for folder in self.folder_name:
@@ -39,12 +46,17 @@ class DataProcessing:
             print("Reading " + folder + " completed!")
         print("Reading completed!")
 
-    def write_dataset(self, filename):
+    def write_dataset(self, filename, val_filename):
         with open(filename, 'w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(["x_train", "y_train"])
             for i in range(len(self.x_train)):
                 writer.writerow([self.x_train[i], self.y_train[i]])
+        with open(val_filename, 'w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(["x_train", "y_train"])
+            for i in range(len(self.val_x_train)):
+                writer.writerow([self.val_x_train[i], self.val_y_train[i]])
         print("Writing completed!")
     
     def change_folder_name(self, folder_name):

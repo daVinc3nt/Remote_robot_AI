@@ -1,4 +1,4 @@
-from default import model_filename
+from default import csv_filename, model_filename
 from model import HandGestureDetectionModel
 from program import Program
 

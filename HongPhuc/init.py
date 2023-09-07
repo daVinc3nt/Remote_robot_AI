@@ -20,7 +20,7 @@ folder_name = {
 }
 data.change_folder_name(folder_name)
 data.create_dataset()
-data.write_dataset(default.csv_filename)
+data.write_dataset(default.csv_filename, default.csv_val_filename)
 
 # Create model
 model = HandGestureDetectionModel()
