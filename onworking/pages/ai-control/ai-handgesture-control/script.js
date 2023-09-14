@@ -99,20 +99,13 @@ async function bluetoothPairing() {
 } //done dùng để lấy tên của robot và thực hiện kết nối bluetooth
 
 function sendMediaServerInfo() {
-  const ssidInput = document.getElementById("ssidInput");
-  const passwordInput = document.getElementById("passwordInput");
-  const hostInput = document.getElementById("hostInput");
-  const portInput = document.getElementById("portInput");
-  const channelInput = document.getElementById("channelInput");
-  const robotSelect = document.getElementById("robotSelect");
-
   networkConfig = {
-    ssid: ssidInput.value,
-    password: passwordInput.value,
-    host: hostInput.value,
-    port: portInput.value,
+    ssid: "DaVincent",
+    password: "13/1/2004",
+    host: "agilertc.com",
+    port: "8276",
     channel: "instant",
-    channel_name: channelInput.value,
+    channel_name: "zozit",
   };
 
   const devicePort =
@@ -166,6 +159,7 @@ async function openWebSocket() {
         });
       });
     }
+
   displayMessage("Open Video WebSocket");
   const videoDecoder = new VideoDecoder({
     output: handleChunk,
@@ -254,13 +248,14 @@ async function detectHandGestureFromVideo(gestureRecognizer, stream) {
         const answer=model.predict(tf.tensor(resultArray))
         const predictions = answer.dataSync();
         let maxNumber = predictions[0];
+        let p;
         for (let i = 1; i < predictions.length; i++) {
           if (predictions[i] > maxNumber) {
-            maxNumber = predictions[i];
+            p = i;
           }
         }
-        if (Object.keys(controlCommandMap).includes(maxNumber)) {
-          const direction = controlCommandMap[maxNumber];
+        if (Object.keys(controlCommandMap).includes(String(p))) {
+          const direction = controlCommandMap[String(p)];
           if (direction !== lastDirection) {
             lastDirection = direction;
 
